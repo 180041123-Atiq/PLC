@@ -224,17 +224,68 @@ class GeneratingGT:
     def howManySpans(self,ii):
         return ds[ii]['text'].count('</span>')
 
+
+class TestingLayouts(GeneratingGT):
+    def __init__(self,ds):
+        super().__init__(ds)
+
+    @staticmethod
+    def save_str_html(self,hh,path):
+        
+        pretty_html = BeautifulSoup(hh, 'html.parser').prettify()
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(pretty_html)
+
+    @staticmethod
+    def save_processed_html(self,ii,hh,path=None):
+        if path is None:
+            path = f'{ii}.html'
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(hh)
+
+    def inspectingLayout(self,ii):
+        self.output = [4] ## 4 is BOS
+
+        # Parse HTML
+        soup = BeautifulSoup(ds[ii]['text'], "html.parser")
+
+        # Remove all <link> tags
+        for tag in VOID_TAGS+LAYOUT_NEUTRAL_TAGS:
+            for link in soup.find_all(tag):
+                link.decompose()
+
+        # Convert back to string
+        clean_html = str(soup)
+
+        p = Premailer(clean_html, external_styles=False)
+        try:
+            inline_style = p.transform()
+            pretty_html = BeautifulSoup(inline_style, 'html.parser')
+            self.save_processed_html(ii,pretty_html.prettify())
+        except Exception as e:
+            print(f"Exception is: {e}")
+            print(f"\nException at: {ii}")
+            self.exceptions.append(ii)
+            # exit()
+
+
 if __name__ == '__main__':
     ds = load_dataset("parquet", data_files="webcode_large_subset/*.parquet")["train"]
-    
-    ggt = GeneratingGT(ds)
 
-    print(f"Number of Samples in the dataset: {ggt.len_of_ds}")
+    tt = TestingLayouts(ds)
+
+    tt.inspectingLayout(106)
+    
+    # ggt = GeneratingGT(ds)
+
+    # print(f"Number of Samples in the dataset: {ggt.len_of_ds}")
 
     # ggt.save_html(ii=456,path='actual_456.html')
     # print(ggt.howManySpans(ii=456))
     # ggt.generating0123(456)
     # ggt.testing()
-    ggt.generatingDataset()
-    print(f"Exceptions at the following numbers: {ggt.exceptions}")
+    # ggt.generatingDataset()
+    # print(f"Exceptions at the following numbers: {ggt.exceptions}")
     # ggt.save_html(538)
