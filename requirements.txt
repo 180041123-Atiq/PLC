@@ -9,3 +9,6 @@ playwright
 hf_transfer
 qwen-vl-utils
 pillow
+datasets
+cssutils
+premailer

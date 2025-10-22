@@ -7,3 +7,8 @@ openai-clip==1.0.1
 colormath
 playwright
 hf_transfer
+qwen-vl-utils
+pillow
+datasets
+cssutils
+premailer
