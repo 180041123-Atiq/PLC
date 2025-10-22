@@ -2,4 +2,6 @@ webcode_large_subset
 *.lock
 webcode_subset_101
 webcode2m_plc
-__pycache__
+__pycache__*.png
+*.png
+*.html

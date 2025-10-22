@@ -1,2 +1,8 @@
-pip install python-Levenshtein
-pip install transforms
+python-Levenshtein
+transforms
+bitsandbytes
+accelerate
+sentencepiece
+openai-clip==1.0.1
+colormath
+playwright
